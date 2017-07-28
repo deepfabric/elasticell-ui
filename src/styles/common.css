@@ -1,0 +1,55 @@
+html, body {
+    margin:0px;
+    height:100%;
+}
+
+.layout {
+    border: 1px solid #d7dde4;
+    background: #f5f7f9;
+    position: relative;
+    height: 100%;
+}
+
+.layout-menu-left {
+    height: 100%;
+    background: #464c5b;
+}
+
+.layout-text {
+    display: none;
+}
+
+.layout-logo-left {
+    width: 90%;
+    height: 30px;
+    background: #5b6270;
+    border-radius: 3px;
+    margin: 15px auto;
+}
+
+
+.layout-main-right {
+    height: 100%;
+}
+
+.layout-header {
+    height: 60px;
+    background: #fff;
+    box-shadow: 0 1px 1px rgba(0,0,0,.1);
+}
+
+.layout-breadcrumb {
+    padding: 10px 15px 0;
+}
+
+.layout-content {
+    min-height: 200px;
+    margin: 15px;
+    overflow: hidden;
+    background: #fff;
+    border-radius: 4px;
+}
+
+.layout-content-main {
+    padding: 10px;
+}
