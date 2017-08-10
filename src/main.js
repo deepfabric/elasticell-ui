@@ -1,13 +1,23 @@
 import Vue from 'vue';
-import iView from 'iview';
 import VueRouter from 'vue-router';
+import VueResource from 'vue-resource';
+import VueCookie  from 'vue-cookie';
 import Routers from './router';
-import Util from './libs/util';
 import App from './app.vue';
-import 'iview/dist/styles/iview.css';
+import Util from './libs/util.js';
+import './libs/jquery.min.js';
+import './libs/bootstrap.min.js';
+import './libs/metisMenu.min.js';
+import './libs/sb-admin-2.min.js';
 
 Vue.use(VueRouter);
-Vue.use(iView);
+Vue.use(VueResource);
+Vue.use(VueCookie);
+
+Vue.filter("storeState", Util.storeState)
+Vue.filter("GB", Util.gb)
+Vue.filter("date", Util.date)
+Vue.filter("range", Util.range)
 
 // 路由配置
 const RouterConfig = {

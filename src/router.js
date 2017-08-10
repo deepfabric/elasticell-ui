@@ -6,13 +6,40 @@ const routers = [
         },
         component: (resolve) => require(['./views/index.vue'], resolve)
     },
-
     {
-        path: '/store',
+        path: '/setting',
+        meta: {
+            title: 'Setting Elasticell'
+        },
+        component: (resolve) => require(['./views/setting.vue'], resolve)
+    },
+    {
+        path: '/operators',
+        meta: {
+            title: 'Elasticell Operator List'
+        },
+        component: (resolve) => require(['./views/operator-list.vue'], resolve)
+    },
+    {
+        path: '/stores',
         meta: {
             title: 'Elasticell Store List'
         },
         component: (resolve) => require(['./views/store-list.vue'], resolve)
+    },
+    {
+        path: '/stores/:id',
+        meta: {
+            title: 'Elasticell Store Info'
+        },
+        component: (resolve) => require(['./views/store.vue'], resolve)
+    },
+    {
+        path: '/cells',
+        meta: {
+            title: 'Elasticell Cell List'
+        },
+        component: (resolve) => require(['./views/cell-list.vue'], resolve)
     }
 ];
 export default routers;

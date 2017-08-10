@@ -2,38 +2,33 @@
 
 </style>
 <template>
-    <Menu :active-name="currentNav" :open-names="openNav" theme="dark" width="auto">
-        <div class="layout-logo-left">
-            <!-- <h2>
-                        Elasticell Dashboard
-                    </h2> -->
+    <div class="navbar-default sidebar" role="navigation">
+        <div class="sidebar-nav navbar-collapse">
+            <ul class="nav" id="side-menu">
+                 <template v-for="nav in navs">
+                    <li v-if="!nav.children" :key="nav.name">
+                        <a :href="nav.path"><i class="fa fa-fw" :class="nav.icon"></i> {{nav.text}}</a>
+                    </li>
+
+                    <li v-if="nav.children" :key="nav.name">
+                        <a href="#">
+                            <i class="fa fa-fw" :class="nav.icon"></i>
+                            {{nav.text}}
+                            <span class="fa arrow"></span>
+                        </a>
+                        <ul class="nav nav-second-level">
+                            <li v-for="sub in nav.children" :key="sub.name">
+                                <a :href="sub.path">{{sub.text}}</a>
+                            </li>
+                        </ul>
+                    </li>
+                </template> 
+            </ul>
         </div>
-    
-        <template v-for="nav in navs">
-            <Submenu v-if="nav.children" :name="nav.name" :key="nav.name">
-                <template slot="title">
-                    <Icon :type="nav.icon" size="20"></Icon>
-                    {{nav.text}}
-                </template>
-    
-                <router-link v-for="sub in nav.children" :to="sub.path" :key="sub.name">
-                    <Menu-item :name="sub.name">
-                        {{sub.text}}
-                    </Menu-item>
-                </router-link>
-            </Submenu>
-    
-            <router-link v-if="!nav.children" :to="nav.path" :key="nav.name">
-                <Menu-item v-if="!nav.children" :name="nav.name">
-                    <Icon :type="nav.icon" size="20"></Icon>
-                    <span>{{nav.text}}</span>
-                </Menu-item>
-            </router-link>
-        </template>
-    </Menu>
+    </div>
 </template>
 <script>
 export default {
-    props: ['navs', 'openNav', 'currentNav']
+    props: ['navs']
 }
 </script>

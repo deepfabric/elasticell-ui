@@ -1,95 +1,213 @@
 <style scoped>
-@import 'styles/common.css';
+@import 'styles/bootstrap.min.css';
+@import 'styles/metisMenu.min.css';
+@import 'styles/dataTables.bootstrap.css';
+@import 'styles/dataTables.responsive.css';
+@import 'styles/sb-admin-2.min.css';
+@import 'styles/font-awesome.min.css';
 </style>
 <template>
-    <div class="layout">
-        <Row style="height: 100%;">
-            <Col span="4" class="layout-menu-left">
-                <app-nav :navs="navs" :openNav="openNav" :currentNav="currentNav"></app-nav>
-            </Col>
-    
-            <Col span="20" class="layout-main-right">
-                <div class="layout-header"></div>
-        
-                <div class="layout-breadcrumb">
-                    <app-breadcrumb :breadcrumbs="breadcrumbs" :currentBreadcrumb="currentBreadcrumb"></app-breadcrumb>
-                </div>
-        
-                <div class="layout-content">
-                    <div class="layout-content-main">
-                        <router-view></router-view>
+    <div id="wrapper">
+        <div class="container">
+            <div id="alert" class="login-panel modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog ">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title" id="myModalLabel">{{alertTitle}}</h4>
+                        </div>
+                        <div v-if="alertContent" class="modal-body">
+                            {{alertContent}}
+                        </div>
+                        <!-- <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary">Save changes</button>
+                            </div> -->
                     </div>
                 </div>
-            </Col>
-        </Row>
+            </div>
+    
+            <div id="confirm" class="login-panel modal fade" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel" aria-hidden="true">
+                <div class="modal-dialog ">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title" id="confirmModalLabel">{{alertTitle}}</h4>
+                        </div>
+                        <div v-if="alertContent" class="modal-body">
+                            {{alertContent}}
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" @click="cancelConfirm">Cancel</button>
+                            <button type="button" class="btn btn-primary" @click="okConfirm">OK</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+        <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="/">Elasticell Dashboard</a>
+            </div>
+    
+            <app-nav :navs="navs"></app-nav>
+        </nav>
+    
+        <div id="page-wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">{{viewTitle}}</h1>
+                </div>
+            </div>
+    
+            <div class="row">
+                <div class="col-lg-12">
+                    <router-view :elasticellCfg="elasticellCfg"></router-view>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 <script>
 import AppNav from './views/nav.vue'
-import AppBreadcrumb from './views/breadcrumb.vue'
 
 export default {
     components: {
-        "app-nav": AppNav,
-        "app-breadcrumb": AppBreadcrumb
+        "app-nav": AppNav
+    },
+
+    created() {
+        this.elasticellCfg.host = this.$cookie.get(this.elasticellCfg.hostAttr)
+        this.elasticellCfg.apiVersion = this.$cookie.get(this.elasticellCfg.apiVersionAttr)
     },
 
     data() {
         return {
+            alertClass: "panel-info",
+            alertTitle: "demo",
+            alertContent: "demo",
+
+            confirmCancelFn: null,
+            confirmOkFn: null,
+
+            viewTitle: "",
             navs: [
                 {
-                    name: "index",
                     text: "Index",
-                    icon: "home",
+                    icon: "fa-home",
                     path: "/"
                 },
                 {
-                    name: "store",
                     text: "Store",
-                    icon: "cloud",
-                    children: [
-                        {
-                            name: "store-list",
-                            text: "List",
-                            path: "/store"
-                        },
-                        {
-                            name: "store-create",
-                            text: "Create",
-                            path: "/store/create"
-                        }
-                    ]
+                    icon: "fa-database",
+                    path: "/stores",
                 },
                 {
-                    name: "cell",
                     text: "Cell",
-                    icon: "grid",
-                    children: [
-                        {
-                            name: "cell-list",
-                            text: "List",
-                            path: "/cell"
-                        }
-                    ]
+                    icon: "fa-codepen",
+                    path: "/cells",
+                },
+                {
+                    text: "Operators",
+                    icon: "fa-spinner",
+                    path: "/operators",
+                },
+                {
+                    text: "Setting",
+                    icon: "fa-gear",
+                    path: "/setting",
                 }
             ],
-            openNav: ["store"],
-            currentNav: "store-create",
 
-            breadcrumbs: [],
-            currentBreadcrumb: "",
+            elasticellCfg: {
+                hostAttr: "_elasticell_host",
+                apiVersionAttr: "_elasticell_api_version",
+
+                host: "",
+                apiVersion: "",
+
+                baseAPI() {
+                    return "http://" + this.host + "/pd/api/" + this.apiVersion
+                },
+
+                summaryAPI() {
+                    return this.baseAPI() + "/system"
+                },
+
+                operatorsAPI() {
+                    return this.baseAPI() + "/operators"
+                },
+
+                storesAPI() {
+                    return this.baseAPI() + "/stores"
+                },
+
+                storeAPI(id) {
+                    return this.storesAPI() + "/" + id
+                },
+
+                storeCellsAPI(id) {
+                    return this.storesAPI() + "/" + id + "/cells"
+                },
+
+                cellsAPI() {
+                    return this.baseAPI() + "/cells"
+                },
+
+                cellAPI(id) {
+                    return this.cellsAPI() + "/" + id
+                },
+
+                transferLeaderAPI(id) {
+                    return this.cellAPI(id) + "/leader"
+                },
+
+                operatorAPI(id) {
+                    return this.cellAPI(id) + "/operator"
+                }
+            }
         }
     },
 
     methods: {
-        updateBreadcrumb(items, currentBreadcrumb) {
-            this.breadcrumbs = items
-            this.currentBreadcrumb = currentBreadcrumb
+        updateViewTitle(viewTitle) {
+            this.viewTitle = viewTitle
         },
 
-        updateNav(openNav, currentNav) {
-            this.openNav = openNav
-            this.currentNav = currentNav
+        alertError(alertContent) {
+            this.alert("alert", "panel-danger", "Failed", alertContent)
+        },
+
+        alertSuccess(alertContent) {
+            this.alert("alert", "panel-success", "Succeed", alertContent)
+        },
+
+        alertConfirm(alertContent, ok, cancel) {
+            this.confirmOkFn = ok
+            this.confirmCancelFn = cancel
+            this.alert("confirm", "", "Confirm", alertContent)
+        },
+
+        alert(model, alertClass, alertTitle, alertContent) {
+            this.alertClass = alertClass
+            this.alertTitle = alertTitle
+            this.alertContent = alertContent
+            $('#' + model).modal('show')
+        },
+
+        cancelConfirm() {
+            $('#confirm').modal('hide')
+            if (this.confirmCancelFn) {
+                this.confirmCancelFn()
+            }
+        },
+
+        okConfirm() {
+            $('#confirm').modal('hide')
+            if (this.confirmOkFn) {
+                this.confirmOkFn()
+            }
         }
     }
 }

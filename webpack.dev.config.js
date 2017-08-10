@@ -30,6 +30,10 @@ module.exports = merge(webpackBaseConfig, {
             filename: '../index.html',
             template: './src/template/index.ejs',
             inject: false
-        })
+        }),
+        new webpack.ProvidePlugin({
+          $: "jquery",
+          jQuery: "jquery"
+      })
     ]
 });
