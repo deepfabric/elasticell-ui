@@ -188,7 +188,7 @@ export default {
                 that.doTransferLeader(cellId, peerId)
             }
 
-            this.app.alertConfirm("Are you shoule transfer leader?", fn)
+            this.app.alertConfirm("Transfer leader", "", fn)
         },
 
         doTransferLeader(cellId, peerId) {

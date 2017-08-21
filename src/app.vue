@@ -9,37 +9,19 @@
 <template>
     <div id="wrapper">
         <div class="container">
-            <div id="alert" class="login-panel modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                <div class="modal-dialog ">
-                    <div class="modal-content">
-                        <div class="modal-header">
+            <div id="alert" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content" :class="alertClass">
+                        <div class="modal-header panel-heading">
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                             <h4 class="modal-title" id="myModalLabel">{{alertTitle}}</h4>
                         </div>
-                        <div v-if="alertContent" class="modal-body">
-                            {{alertContent}}
+                        <div v-if="alertData" class="modal-body">
+                            <pre>{{alertData}}</pre>
                         </div>
-                        <!-- <div class="modal-footer">
-                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                <button type="button" class="btn btn-primary">Save changes</button>
-                            </div> -->
-                    </div>
-                </div>
-            </div>
-    
-            <div id="confirm" class="login-panel modal fade" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel" aria-hidden="true">
-                <div class="modal-dialog ">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                            <h4 class="modal-title" id="confirmModalLabel">{{alertTitle}}</h4>
-                        </div>
-                        <div v-if="alertContent" class="modal-body">
-                            {{alertContent}}
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-default" @click="cancelConfirm">Cancel</button>
-                            <button type="button" class="btn btn-primary" @click="okConfirm">OK</button>
+                        <div v-if="alertIsConfirm" class="modal-footer">
+                            <button type="button" class="btn btn-default" @click="cancelAlert">NO</button>
+                            <button type="button" class="btn btn-primary" @click="okAlert">YES</button>
                         </div>
                     </div>
                 </div>
@@ -85,11 +67,11 @@ export default {
     data() {
         return {
             alertClass: "panel-info",
-            alertTitle: "demo",
-            alertContent: "demo",
-
-            confirmCancelFn: null,
-            confirmOkFn: null,
+            alertTitle: "",
+            alertData: "",
+            alertIsConfirm: false,
+            alertCancelCB: null,
+            alertOKCB: null,
 
             viewTitle: "",
             navs: [
@@ -143,6 +125,10 @@ export default {
                     return this.baseAPI() + "/stores"
                 },
 
+                storesLogAPI() {
+                    return this.baseAPI() + "/stores/log"
+                },
+
                 storeAPI(id) {
                     return this.storesAPI() + "/" + id
                 },
@@ -175,39 +161,44 @@ export default {
             this.viewTitle = viewTitle
         },
 
-        alertError(alertContent) {
-            this.alert("alert", "panel-danger", "Failed", alertContent)
+        alertError(alertData) {
+            this.alert("Operation Failed", alertData, "panel-danger", false)
         },
 
-        alertSuccess(alertContent) {
-            this.alert("alert", "panel-success", "Succeed", alertContent)
+        alertSuccess(alertData) {
+            this.alert("Operation Succeed", alertData, "panel-success", false)
         },
 
-        alertConfirm(alertContent, ok, cancel) {
-            this.confirmOkFn = ok
-            this.confirmCancelFn = cancel
-            this.alert("confirm", "", "Confirm", alertContent)
+        alertConfirm(alertTitle, alertData, alertOKCB, alertCancelCB) {
+            this.alert(alertTitle, alertData, "panel-warning", true, alertOKCB, alertCancelCB)
         },
 
-        alert(model, alertClass, alertTitle, alertContent) {
-            this.alertClass = alertClass
+        alert(alertTitle, alertData, alertClass, alertIsConfirm, alertOKCB, alertCancelCB) {
             this.alertTitle = alertTitle
-            this.alertContent = alertContent
-            $('#' + model).modal('show')
+            this.alertData = alertData
+            this.alertClass = alertClass
+            this.alertIsConfirm = alertIsConfirm
+            this.alertOKCB = alertOKCB
+            this.alertCancelCB = alertCancelCB
+            setTimeout(this.modal, 300)
         },
 
-        cancelConfirm() {
-            $('#confirm').modal('hide')
-            if (this.confirmCancelFn) {
-                this.confirmCancelFn()
+        cancelAlert() {
+            this.modal()
+            if (this.alertCancelCB) {
+                this.alertCancelCB()
             }
         },
 
-        okConfirm() {
-            $('#confirm').modal('hide')
-            if (this.confirmOkFn) {
-                this.confirmOkFn()
+        okAlert() {
+            this.modal()
+            if (this.alertOKCB) {
+                this.alertOKCB()
             }
+        },
+
+        modal() {
+            $('#alert').modal('toggle');
         }
     }
 }

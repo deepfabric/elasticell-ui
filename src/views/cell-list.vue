@@ -6,7 +6,6 @@
 </template>
 <script>
 import AppCells from './cells.vue'
-// import Util from '../libs/util.js';
 
 export default {
     props: ['elasticellCfg'],

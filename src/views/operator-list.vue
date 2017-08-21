@@ -11,7 +11,7 @@
         <tbody>
             <tr v-for="opt in opts" :key="opt">
                 <td>
-                    <pre>{{opt | json}}</pre>
+                    <pre>{{opt}}</pre>
                 </td>
             </tr>
         </tbody>
