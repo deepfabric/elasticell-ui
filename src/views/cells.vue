@@ -188,7 +188,7 @@ export default {
                 that.doTransferLeader(cellId, peerId)
             }
 
-            this.app.alertConfirm("Transfer leader", "", fn)
+            this.app.alertConfirm("Transfer Leader To Peer", peerId, fn)
         },
 
         doTransferLeader(cellId, peerId) {
@@ -203,7 +203,10 @@ export default {
                     return
                 }
 
-                that.loadCells()
+                setTimeout(function() {
+                    that.loadCells()
+                    that.app.alertSuccess(response.body)
+                }, 2000)
             }, response => {
                 that.app.alertError(response)
             })

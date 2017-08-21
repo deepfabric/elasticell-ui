@@ -204,7 +204,7 @@ export default {
                     that.$parent.alertError(response.body.error)
                 } else {
                     that.loadStores()
-                    that.$parent.alertSuccess("Set log level succeed")
+                    that.$parent.alertSuccess(response.body)
                 }
             }, response => {
                 that.$parent.alertError(response)
