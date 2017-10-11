@@ -7,6 +7,13 @@ const routers = [
         component: (resolve) => require(['./views/index.vue'], resolve)
     },
     {
+        path: '/init',
+        meta: {
+            title: 'Init Elasticell Cluster'
+        },
+        component: (resolve) => require(['./views/init.vue'], resolve)
+    },
+    {
         path: '/setting',
         meta: {
             title: 'Setting Elasticell'

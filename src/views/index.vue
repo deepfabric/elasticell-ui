@@ -115,7 +115,7 @@ export default {
         this.$parent.updateViewTitle("Elasticell Cluster Summary")
         this.loadSystem()
 
-        setInterval(this.loadSystem, 2000);
+        this.timer = setInterval(this.loadSystem, 2000);
     },
 
     computed: {
@@ -134,20 +134,26 @@ export default {
 
     data() {
         return {
-            system: {}
+            system: {},
+            timer: 0,
         }
     },
 
     methods: {
         loadSystem() {
             var that = this
-            this.$http.get(this.elasticellCfg.summaryAPI()).then(response => {
+            this.$http.get(this.elasticellCfg.systemAPI()).then(response => {
                 if (response.body.code != 0) {
                     that.$parent.alertError(response.body.error)
                     return
                 }
 
                 that.system = response.body.value
+
+                if (!that.system.alreadyBootstrapped) {
+                    clearInterval(that.timer)
+                    that.$router.replace("/init")
+                }
             }, response => {
                 that.$parent.alertError(response)
             })

@@ -113,7 +113,7 @@ export default {
                     return "http://" + this.host + "/pd/api/" + this.apiVersion
                 },
 
-                summaryAPI() {
+                systemAPI() {
                     return this.baseAPI() + "/system"
                 },
 
