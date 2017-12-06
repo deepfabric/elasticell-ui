@@ -30,8 +30,8 @@ export default {
 
     methods: {
         setting() {
-            this.$cookie.set(this.elasticellCfg.hostAttr, this.elasticellCfg.host)
-            this.$cookie.set(this.elasticellCfg.apiVersionAttr, this.elasticellCfg.apiVersion)
+            this.$storage.set(this.elasticellCfg.hostAttr, this.elasticellCfg.host)
+            this.$storage.set(this.elasticellCfg.apiVersionAttr, this.elasticellCfg.apiVersion)
 
             this.$parent.alertSuccess("Update Elasticell success")
         }

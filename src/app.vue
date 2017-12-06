@@ -60,8 +60,8 @@ export default {
     },
 
     created() {
-        this.elasticellCfg.host = this.$cookie.get(this.elasticellCfg.hostAttr)
-        this.elasticellCfg.apiVersion = this.$cookie.get(this.elasticellCfg.apiVersionAttr)
+        this.elasticellCfg.host = this.$storage.get(this.elasticellCfg.hostAttr)
+        this.elasticellCfg.apiVersion = this.$storage.get(this.elasticellCfg.apiVersionAttr)
     },
 
     data() {
@@ -79,6 +79,11 @@ export default {
                     text: "Index",
                     icon: "fa-home",
                     path: "/"
+                },
+                {
+                    text: "Index Management",
+                    icon: "fa-database",
+                    path: "/indices",
                 },
                 {
                     text: "Store",
@@ -119,6 +124,14 @@ export default {
 
                 operatorsAPI() {
                     return this.baseAPI() + "/operators"
+                },
+
+                indicesAPI() {
+                    return this.baseAPI() + "/indices"
+                },
+
+                indexAPI(name) {
+                    return this.indicesAPI() + "/" + name
                 },
 
                 storesAPI() {
