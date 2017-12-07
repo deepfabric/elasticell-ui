@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import VueResource from 'vue-resource';
-import VueCookie  from 'vue-cookie';
+import Storage from 'vue-web-storage';
 import Routers from './router';
 import App from './app.vue';
 import Util from './libs/util.js';
@@ -12,7 +12,10 @@ import './libs/sb-admin-2.min.js';
 
 Vue.use(VueRouter);
 Vue.use(VueResource);
-Vue.use(VueCookie);
+Vue.use(Storage, {
+    prefix: 'elasticell',// default `app_`
+    driver: 'local', // default 'local'
+});
 
 Vue.filter("storeState", Util.storeState)
 Vue.filter("GB", Util.gb)

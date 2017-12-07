@@ -28,6 +28,13 @@ const routers = [
         component: (resolve) => require(['./views/operator-list.vue'], resolve)
     },
     {
+        path: '/indices',
+        meta: {
+            title: 'Elasticell Index Management'
+        },
+        component: (resolve) => require(['./views/index-mgmt.vue'], resolve)
+    },
+    {
         path: '/stores',
         meta: {
             title: 'Elasticell Store List'
